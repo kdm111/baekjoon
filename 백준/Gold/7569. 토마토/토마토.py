@@ -22,7 +22,7 @@ for a in range(h):
 
 ans = 0
 while rest > 0 and tomato:
-    temp = []
+    temp = deque([])
     ans += 1
     for t in tomato:
         c_h, c_r, c_c = t
@@ -34,6 +34,6 @@ while rest > 0 and tomato:
                 rest -= 1
                 temp.append((n_h, n_r, n_c))
                 graph[n_h][n_r][n_c] = 1
-    tomato = temp[:]
+    tomato = deque(temp)
 
 print(ans if rest == 0 else -1)
