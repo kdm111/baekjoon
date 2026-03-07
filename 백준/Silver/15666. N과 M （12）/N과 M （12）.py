@@ -1,17 +1,13 @@
 n, m = map(int, input().split())
-nums = list(map(int, input().split()))
+nums = sorted(set(map(int, input().split())))
 
-nums = sorted(set(nums))
-
-def solve(curr):
-    if len(curr) == m:
+curr = [-1] * m
+def solve(depth, start):
+    if depth == m:
         print(*curr)
         return
-    for i in range(len(nums)):
-        if curr[-1] <= nums[i]:
-            curr.append(nums[i])
-            solve(curr)
-            curr.pop()
+    for i in range(start, len(nums)):
+        curr[depth] = nums[i]
+        solve(depth+1, i)
 
-for num in nums:
-    solve([num])
+solve(0, 0)
