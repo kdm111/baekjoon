@@ -3,28 +3,19 @@ graph = []
 for _ in range(N):
     graph.append(list(map(int, input().split())))
 
-ans = 0
-def is_safe_diagonal(r,c):
-    global N
-    return (0 <= r + 1 < N and
-            0 <= c + 1 < N and
-            graph[r+1][c] == 0 and
-            graph[r][c+1] == 0 and
-            graph[r+1][c+1] == 0)
+dp = [[[0]*3 for _ in range(N)] for _ in range(N)]
 
-def solve(r,c,dir):
-    global ans, N
+dp[0][1][0] = 1
+for r in range(N):
+    for c in range(N):
+        for d in range(3):
+            if graph[r][c] == 1:
+                continue
+            if d == 0 and c-1 > 0 and graph[r][c-1] == 0:
+                dp[r][c][d] = dp[r][c-1][0] + dp[r][c-1][2]
+            if d == 1 and r-1 > 0 and graph[r-1][c] == 0: 
+                dp[r][c][d] = dp[r-1][c][1] + dp[r-1][c][2]
+            if d == 2 and r > 0 and c > 0 and graph[r][c-1] == 0 and graph[r-1][c-1] == 0 and graph[r-1][c] == 0:
+                dp[r][c][d] = dp[r-1][c-1][0] + dp[r-1][c-1][1] + dp[r-1][c-1][2]
 
-    if r == N-1 and c == N-1:
-        return 1
-    ret = 0
-    if dir == 'h' or dir == 'd':
-        if 0 <= c + 1 < N and graph[r][c+1] == 0:
-            ret += solve(r,c+1, 'h')
-    if dir == 'v' or dir == 'd':
-        if 0 <= r + 1 < N and graph[r+1][c] == 0:
-            ret += solve(r+1,c,'v')
-    if is_safe_diagonal(r, c):
-        ret += solve(r+1,c+1,'d')
-    return ret
-print(solve(0,1,'h'))
+print(sum(dp[-1][-1][i] for i in range(3)))
